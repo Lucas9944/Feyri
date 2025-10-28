@@ -1,0 +1,14 @@
+<%- include('includes/header') %>
+
+<body>
+    <h2>My brand page</h2>
+
+    <% if(!member) { %>
+    <h2>siz authenticated emassiz</h2>
+    <% } else { %>
+    <h1>siz authenticated bo'lgansiz, va sizning nickingiz <%= member.mb_nick%> 
+    </h1>
+    <% } %>
+</body>
+
+<%- include('includes/footer') %>

@@ -1,6 +1,17 @@
 const Member = require("../models/Member");
 let brandController = module.exports;
 
+brandController.getMyBrandData = async (req, res) => {
+  try {
+    console.log("GET: const/getMyBrandData");
+    // TODO: Get my brand products
+    res.render("kosmetika-menu");
+  } catch (err) {
+    console.log(`ERROR, cont/getMyBrandData, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
 brandController.getSignupMyBrand = async (req, res) => {
   try {
     console.log("GET: const/getSignupMyBrand");
@@ -17,7 +28,8 @@ brandController.signupProcess = async (req, res) => {
       member = new Member(),
       new_member = await member.signupData(data);
 
-    res.json({ state: "succeed", data: new_member });
+    req.session.member = new_member;
+    res.redirect("/feyri/products/menu");
   } catch (err) {
     console.log(`ERROR, cont/signupProcess, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -41,7 +53,10 @@ brandController.loginProcess = async (req, res) => {
       member = new Member(),
       result = await member.loginData(data);
 
-    res.json({ state: "succeed", data: result });
+    req.session.member = result;
+    req.session.save(function () {
+      res.redirect("/feyri/products/menu");
+    });
   } catch (err) {
     console.log(`ERROR, cont/loginProcess, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -52,3 +67,11 @@ brandController.logout = (req, res) => {
   console.log("GET. cont.logout");
   res.send("logout sahifasidasiz123");
 };
+
+brandController.checkSessions = (req, res) => {
+    if (req.session?.member) {
+      res.json({ state: "succeed", data: req.session.member });
+    } else {
+      res.json({ state: "fail", message: "You are not authenticated" });
+    }
+  };
