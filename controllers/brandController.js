@@ -5,7 +5,7 @@ brandController.getMyBrandData = async (req, res) => {
   try {
     console.log("GET: const/getMyBrandData");
     // TODO: Get my brand products
-    res.render("kosmetika-menu");
+    res.render("brand-menu");
   } catch (err) {
     console.log(`ERROR, cont/getMyBrandData, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -67,6 +67,18 @@ brandController.logout = (req, res) => {
   console.log("GET. cont.logout");
   res.send("logout sahifasidasiz123");
 };
+
+brandController.validateAuthBrand = (req, res, next) => {
+    if (req.session?.member?.mp_type === "BRAND") {
+      req.member = req.session.member;
+      next();
+    } else
+      res.json({
+        state: "fail",
+        message: "only authenticated members with brand type",
+      });
+  };
+  
 
 brandController.checkSessions = (req, res) => {
     if (req.session?.member) {
