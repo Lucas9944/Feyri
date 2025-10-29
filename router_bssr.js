@@ -2,6 +2,7 @@ const express = require("express");
 const router_bssr = express.Router();
 const brandController = require("./controllers/brandController");
 const productController = require("./controllers/productController");
+const { uploadProductImage } = require("./utils/upload-multer");
 
 /*******************************
  *           BSSR EJS          *
@@ -21,6 +22,7 @@ router_bssr.get("/products/menu", brandController.getMyBrandData);
 router_bssr.post(
   "/products/create",
   brandController.validateAuthBrand,
+  uploadProductImage.single("product_image"),
   productController.addNewProduct
 );
 router_bssr.post("/products/edit/:id", productController.updateChosenProduct);
