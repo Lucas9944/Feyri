@@ -70,7 +70,9 @@ brandController.loginProcess = async (req, res) => {
 
     req.session.member = result;
     req.session.save(function () {
-      res.redirect("/feyri/products/menu");
+      result.mb_type === "ADMIN"
+      ? res.redirect("/feyri/all-brand")
+      : res.redirect("/feyri/products/menu");
     });
   } catch (err) {
     console.log(`ERROR, cont/loginProcess, ${err.message}`);
