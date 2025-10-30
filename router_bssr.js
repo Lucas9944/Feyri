@@ -8,6 +8,8 @@ const uploader_product = require("./utils/upload-multer")("products");
  *           BSSR EJS          *
  *******************************/
 
+router_bssr.get("/", brandController.home);
+
 router_bssr
   .get("/signup", brandController.getSignupMyBrand)
   .post("/signup", brandController.signupProcess);
