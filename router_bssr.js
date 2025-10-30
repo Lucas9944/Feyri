@@ -18,7 +18,7 @@ router_bssr
 router_bssr.get("/logout", brandController.logout);
 router_bssr.get("/check-me", brandController.checkSessions);
 
-router_bssr.get("/products/menu", brandController.getMyBrandData);
+router_bssr.get("/products/menu", brandController.getMyBrandProducts);
 router_bssr.post(
   "/products/create",
   brandController.validateAuthBrand,
