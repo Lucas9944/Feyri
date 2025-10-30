@@ -19,9 +19,7 @@ class Product {
 
       let match = { product_status: "PROCESS" };
       if (data.brand_mb_id) {
-        match["brand_mb_id"] = shapeIntoMongooseObjectId(
-          data.brand_mb_id
-        );
+        match["brand_mb_id"] = shapeIntoMongooseObjectId(data.brand_mb_id);
         match["product_collection"] = data.product_collection;
       }
 
@@ -100,7 +98,7 @@ class Product {
     }
   }
 
-  async updateChosenProduct(id, updated_data, mb_id) {
+  async updateChosenProductData(id, updated_data, mb_id) {
     try {
       id = shapeIntoMongooseObjectId(id);
       mb_id = shapeIntoMongooseObjectId(mb_id);
