@@ -1,26 +1,27 @@
+const Definer = require("../lib/mistake");
 const Member = require("../models/Member");
 const Product = require("../models/Product");
+const assert = require("assert");
 
 let brandController = module.exports;
 
 brandController.home = (req, res) => {
-    try {
-      console.log("GET: cont/home");
-      res.render("home-page");
-    } catch (err) {
-      console.log(`ERROR, cont/home, ${err.message}`);
-      res.json({ state: "fail", message: err.message });
-    }
-  };
-  
+  try {
+    console.log("GET: cont/home");
+    res.render("home-page");
+  } catch (err) {
+    console.log(`ERROR, cont/home, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
 brandController.getMyBrandProducts = async (req, res) => {
   try {
     console.log("GET: const/getMyBrandProducts");
-    // TODO: Get my brand products
     const product = new Product();
     const data = await product.getAllProductsDataResto(res.locals.member);
-    
-    res.render("brand-menu");
+
+    res.render("brand-menu", { restaurant_data: data });
   } catch (err) {
     console.log(`ERROR, cont/getMyBrandProducts, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -39,11 +40,16 @@ brandController.getSignupMyBrand = async (req, res) => {
 brandController.signupProcess = async (req, res) => {
   try {
     console.log("POST: const/signupProcess");
-    const data = req.body,
-      member = new Member(),
-      new_member = await member.signupData(data);
+    assert(req.file, Definer.general_err3);
+    let new_member = req.body;
+    new_member.mb_type = "BRAND";
+    new_member.mb_image = req.file.path;
 
-    req.session.member = new_member;
+    const member = new Member();
+    const result = await member.signupData(new_member);
+    assert(result, Definer.general_err1);
+
+    req.session.member = result;
     res.redirect("/feyri/products/menu");
   } catch (err) {
     console.log(`ERROR, cont/signupProcess, ${err.message}`);
@@ -71,8 +77,8 @@ brandController.loginProcess = async (req, res) => {
     req.session.member = result;
     req.session.save(function () {
       result.mb_type === "ADMIN"
-      ? res.redirect("/feyri/all-brand")
-      : res.redirect("/feyri/products/menu");
+        ? res.redirect("/feyri/all-brand")
+        : res.redirect("/feyri/products/menu");
     });
   } catch (err) {
     console.log(`ERROR, cont/loginProcess, ${err.message}`);

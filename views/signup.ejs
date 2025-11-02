@@ -5,7 +5,7 @@
 
 
 <body>
-    <form onsubmit="return validateSignUpForm()" class="login_container" action="/feyri/sign-up" method="POST"
+    <form onsubmit="return validateSignUpForm()" class="login_container" action="/feyri/signup" method="POST"
         enctype="multipart/form-data">
         <div class="login_frame" style="width: 650px; height: 730px;">
 
@@ -57,12 +57,12 @@
                 <div class="media-frame">
                     <img class="upload_img_frame" src="/images/default_resto.png">
                     <div class="upload_container">
-                        <span class="media_text">Brand rasmi</span>
+                        <span class="media_text">brand rasmi</span>
                         <div class="filebox bs3-primary preview-image">
                             <input class="upload-name" value="Rasmni tanlang" disabled="disabled">
                             <label for="input_file">Rasm yuklash</label>
-                            <input type="file" id="input_file" name="restaurant_img"
-                                class="upload-hidden form-control-file restaurant_img" />
+                            <input type="file" id="input_file" name="brand_img"
+                                class="upload-hidden form-control-file brand_img" />
                         </div>
                         <p class="thumbnail_desc">
                             Brand rasmingizni bu yerga yuklang. <br /> Muhim ko'rsatmalar: .jpg, .jpeg, yoki .png.
@@ -72,12 +72,12 @@
                 </div>
             </div>
 
-            <button class="login_btn btn" name="signup" type="submit">Ro'yxatdan o'tish</button>
+            <button class="login_btn btn" name="sign-up" type="submit">Ro'yxatdan o'tish</button>
 
 
         </div>
     </form>
-    <!-- <script>
+    <script>
         $(function () {
             let fileTarget = $('.filebox .upload-hidden');
             let filename = '';
@@ -110,7 +110,7 @@
             const mb_phone = $(".mb_phone").val();
             const mb_password = $(".mb_password").val();
             const mb_confirm_password = $(".mb_confirm_password").val();
-            const restaurant_img = $('.restaurant_img').get(0).files[0] ? null :
+            const brand_img = $('.brand_img').get(0).files[0] ??null ;
 
                 if (
                     mb_nick == "" ||
@@ -126,7 +126,7 @@
             }
 
 
-            if (!restaurant_img) {
+            if (!brand_img) {
                 alert('Iltimos rasmni yuklang!');
                 return false;
 
@@ -134,7 +134,7 @@
 
             return true;
         }
-    </script> -->
+    </script> 
 </body>
 
 <%- include('includes/footer') %>
