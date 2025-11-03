@@ -1,5 +1,6 @@
 const Definer = require("../lib/mistake");
 const Member = require("../models/Member");
+const Brand = require("../models/Brand");
 const Product = require("../models/Product");
 const assert = require("assert");
 
@@ -77,7 +78,7 @@ brandController.loginProcess = async (req, res) => {
     req.session.member = result;
     req.session.save(function () {
       result.mb_type === "ADMIN"
-        ? res.redirect("/feyri/all-brand")
+        ? res.redirect("/feyri/all-brands")
         : res.redirect("/feyri/products/menu");
     });
   } catch (err) {
@@ -114,5 +115,44 @@ brandController.checkSessions = (req, res) => {
     res.json({ state: "succeed", data: req.session.member });
   } else {
     res.json({ state: "fail", message: "You are not authenticated" });
+  }
+};
+
+brandController.validateAdmin = (req, res, next) => {
+  if (req.session?.member?.mb_type === "ADMIN") {
+    req.member = req.session.member;
+    next();
+  } else {
+    const html = `<script>
+          alert('Admin page: Permission denied!');
+          window.location.replace('/resto');
+      </script>`;
+    res.end(html);
+  }
+};
+
+brandController.getAllBrands = async (req, res) => {
+  try {
+    console.log("GET cont/getAllBrands");
+
+    const brand = new Brand();
+    const brands_data = await brand.getAllBrandsData();
+    console.log("brands_data;", brands_data);
+    res.render("all-brands", { brands_data: brands_data });
+  } catch (err) {
+    console.log(`ERROR, cont/getAllBrands, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
+brandController.updateBrandByAdmin = async (req, res) => {
+  try {
+    console.log("GET cont/updateBrandByAdmin");
+    const brand = new Brand();
+    const result = await brand.updateBrandByAdminData(req.body);
+    await res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/updateBrandByAdmin, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
   }
 };

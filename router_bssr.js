@@ -38,4 +38,16 @@ router_bssr.post(
   productController.updateChosenProduct
 );
 
+router_bssr.get(
+  "/all-brands",
+  brandController.validateAdmin,
+  brandController.getAllBrands
+);
+
+router_bssr.post(
+  "/all-brands/edit",
+  brandController.validateAdmin,
+  brandController.updateBrandByAdmin
+);
+
 module.exports = router_bssr;
