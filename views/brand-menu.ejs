@@ -1,16 +1,268 @@
 <%- include('includes/header') %>
 
+<link rel="stylesheet" type="text/css" href="/css/menu.css">
+
 <body>
-    <h2>My brand page</h2>
+    <div id="main_container">
+        <div class="group_name">
+            <ul class="nav justify-content-center">
+                <li class="nav-item" style="cursor: pointer;">
+                    <a class="nav-link active" href="feyri">Home</a>
+                </li>
+                <li class="nav-item" style="cursor: pointer;">
+                    <a class="nav-link" href="/feyri/products/menu">MyFeyri</a>
+                </li>
 
-    <% if(!member) { %>
-    <h2>siz authenticated emassiz</h2>
-    <% } else { %>
-    <h1>siz authenticated bo'lgansiz, va sizning nickingiz: <%= member.mb_nick%>  <br> <br>
+                <li class="nav-item" style="cursor: pointer;">
+                    <a class="nav-link" href="/feyri/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
 
-    sizning tell raqamingiz: <%= member.mb_phone%> 
-    </h1>
-    <% } %>
+        <div class="brand_menu_frame">
+            <div class="brand_container">
+                <div class="dishs_table">
+                    <span class="new_dish_txt">
+                        <%= member.mb_nick.toUpperCase() %> Brandlar jamlammasi
+                    </span>
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <th scope="col">T/r</th>
+                            <th scope="col">Brand nomi</th>
+                            <th scope="col">Brand turi</th>
+                            <th scope="col">Brand hajmi</th>
+                            <th scope="col">Brand Narhi</th>
+                            <th scope="col">Brand qoldiq miqdori</th>
+                            <th scope="col">Brand Holati</th>
+                        </thead>
+
+                        <% brand_data.map((value, key) => { %>
+                        <tbody style="background: white;">
+                            <td><%= key + 1 %></td>
+                            <td><%= value.product_name %></td>
+                            <td><%= value.product_collection %></td>
+                            <td><%= value.product_collection === 'drink' ? value.product_volume : value.product_size %>
+                            </td>
+                            <td><%= value.product_price %></td>
+                            <td><%= value.product_left_cnt %></td>
+                            <td>
+                                <select class="space_select new_product_status" id="<%= value._id %>">
+                                    <option value="PAUSED" <%= value.product_status === 'PAUSED' ? 'selected' : '' %>>
+                                        PAUSED</option>
+                                    <option value="PROCESS" <%= value.product_status === 'PROCESS' ? 'selected' : '' %>>
+                                        PROCESS
+                                    </option>
+                                </select>
+                            </td>
+                        </tbody>
+                        <% }); %>
+                    </table>
+
+                    <div class="long_input" style="align-items: flex-end; margin-bottom: 25px;">
+                        <button class="btn btn-primary hiding_btn">Brand Qo'shish</button>
+                    </div>
+
+                </div>
+
+                <form onsubmit="return validateForm()" action="/feyri/products/create" method="POST"
+                    class="dish_container" enctype='multipart/form-data'>
+                    <div class="long_input" style="display: flex; align-items: center;">
+                        <span class="new_dish_txt">Yangi Brand</span>
+                    </div>
+
+
+                    <div>
+                        <div class="long_input">
+                            <label>Brand nomi</label>
+                            <input type="text" placeholder="Brand nomi" name="product_name" class="product_name" />
+                        </div>
+                        <input name="product_status" value="PAUSED" class="product_status" hidden>
+                        <input name="brand_mb_id" value="<%= member._id %>" class="brand_mb_id" hidden>
+                    </div>
+
+                    <div class="half_input_frame">
+                        <div class="half_input">
+                            <label>Brand narhi</label>
+                            <input type="number" placeholder="Brand narhi" name="product_price" class="product_price" />
+                        </div>
+                        <div class="half_input">
+                            <label>Brand Qoldiq miqdori</label>
+                            <input type="number" placeholder="Brand Mavjud miqdori" name="product_left_cnt"
+                                class="product_left_cnt" />
+                        </div>
+                    </div>
+
+                    <div class="half_input_frame">
+
+                        <div class="half_input">
+                            <label>Brand Turi</label>
+                            <select class="product_collection" name="product_collection">
+                                <option value="modern">modern</option>
+                                <option value="art_deco">art_deco</option>
+                                <option value="minimalist">minimalist</option>
+                                <option value="mid_ceuntry">mid_ceuntry</option>
+                            </select>
+                        </div>
+
+                        <div class="half_input" id="product_size">
+                            <label>Brand Hajmi</label>
+                            <select class="product_size" name="product_size">
+                                <option value="premium_quality">premium_quality</option>
+                                <option value="classic_collection">classic_collection</option>
+                                <option value="conscious">conscious</option>
+                            </select>
+                        </div>
+
+                        <div class="half_input" id="product_volume" style="display: none;">
+                            <label>Ichimlik Hajmi</label>
+                            <select class="product_volume" name="product_volume">
+                                <option value="0.5">0.5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                            
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="long_input">
+                        <label>Brand haqida</label>
+                        <textarea name="product_description" class="product_description"></textarea>
+                    </div>
+
+                    <div class="img_frame">
+                        <label>Brand Rasmlari</label>
+                        <div class="media-frame">
+                            <div class="upload_img_box">
+                                <img src="/images/upload.svg" class="1" id="image_section_1">
+                                <input type="file" id="file" name="product_images" class="image_one"
+                                    onchange="previewFileHandler(this, 1)">
+                            </div>
+                            <div class="upload_img_box">
+                                <img src="/images/upload.svg" class="2" id="image_section_2">
+                                <input type="file" id="file" name="product_images" class="image_two"
+                                    onchange="previewFileHandler(this, 2)">
+                            </div>
+                            <div class="upload_img_box">
+                                <img src="/images/upload.svg" class="3" id="image_section_3">
+                                <input type="file" id="file" name="product_images" class="image_three" onchange="
+                                previewFileHandler(this, 3)">
+                            </div>
+                            <div class="upload_img_box">
+                                <img src="/images/upload.svg" class="4" id="image_section_4">
+                                <input type="file" id="file" name="product_images" class="image_four" onchange="
+                                previewFileHandler(this, 4)">
+                            </div>
+                            <div class="upload_img_box">
+                                <img src="/images/upload.svg" class="5" id="image_section_5">
+                                <input type="file" id="file" name="product_images" class="image_five"
+                                    onchange="previewFileHandler(this, 5)">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="long_input" style="align-items: flex-end; margin-bottom: 25px;">
+                        <button type="submit" class="btn btn-primary" id="create_product">Chop etish</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $(function () {
+
+            $(".product_collection").on("change", () => {
+                const selected_value = $(".product_collection").val();
+                if (selected_value === 'drink') {
+                    $("#product_volume").show();
+                    $("#product_size").hide();
+                } else {
+                    $("#product_volume").hide();
+                    $("#product_size").show();
+                }
+            });
+
+            $(".hiding_btn").on("click", () => {
+                $(".dish_container").slideToggle(500);
+                $(".hiding_btn").css("display", "none");
+            })
+
+
+            // product status changer
+            $(".new_product_status").on("change", async function (e) {
+                const id = e.target.id;
+                const product_status = $(`#${id}.new_product_status`).val();
+                // const mb_id = '<%= member._id %>';
+
+
+                try {
+                    const url = `/products/edit/${id}`;
+                    const response = await axios.post(`/feyri/products/edit/${id}`, {
+                        id: id,
+                        product_status: product_status
+                    });
+                    const result = response.data;
+                    console.log("result", result);
+
+                    if (result.state == 'success') {
+                        alert('success');
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+
+                } catch (err) {
+                    console.log('updateChosenProduct err:', err);
+                }
+
+            })
+
+        });
+
+
+        function validateForm() {
+            const brand_mb_id = $(".brand_mb_id").val();
+            const product_name = $(".product_name").val();
+            const product_price = $(".product_price").val();
+            const product_left_cnt = $(".product_left_cnt").val();
+            const product_collection = $(".product_collection").val();
+            const product_description = $(".product_description").val();
+            const product_status = $(".product_status").val();
+
+            if (brand_mb_id == '' || product_name == '' || product_price == '' || product_left_cnt == '' ||
+                product_collection == '' || product_description == '' || product_status == '') {
+                alert('Iltimos hamma malumotlarni kiriting');
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function previewFileHandler(input, order) {
+            const image_class_name = input.className;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById('image_section_' + order);
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+
+    <% include('includes/footer') %>
+
+
+
+
+
+
+
 </body>
 
 <%- include('includes/footer') %>

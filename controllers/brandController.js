@@ -21,10 +21,10 @@ brandController.getMyBrandProducts = async (req, res) => {
     const product = new Product();
     const data = await product.getAllProductsDataResto(res.locals.member);
 
-    res.render("brand-menu", { restaurant_data: data });
+    res.render("brand-menu", { brand_data: data });
   } catch (err) {
     console.log(`ERROR, cont/getMyBrandProducts, ${err.message}`);
-    res.json({ state: "fail", message: err.message });
+    res.redirect("/feyri");
   }
 };
 
