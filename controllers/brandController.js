@@ -47,7 +47,7 @@ brandController.signupProcess = async (req, res) => {
 
     const member = new Member();
     const result = await member.signupData(new_member);
-    assert(result, Definer.general_err1);
+    assert(req.file, Definer.general_err1);
 
     req.session.member = result;
     res.redirect("/feyri/products/menu");
@@ -87,8 +87,15 @@ brandController.loginProcess = async (req, res) => {
 };
 
 brandController.logout = (req, res) => {
-  console.log("GET. cont.logout");
-  res.send("logout sahifasidasiz123");
+  try {
+    console.log("GET. cont/logout");
+    req.session.destroy(function () {
+      res.redirect("/feyri");
+    });
+  } catch (err) {
+    console.log(`ERROR, cont/logout, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
 };
 
 brandController.validateAuthBrand = (req, res, next) => {
