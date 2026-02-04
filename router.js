@@ -26,14 +26,4 @@ router.post(
   productController.getAllProducts
 );
 
-
-// others || boshqa routerlar
-router.get("/menu", (req, res) => {
-  res.send("Menu sahifadasiz");
-});
-
-router.get("/community", (req, res) => {
-  res.send("Jamiyat sahifasidasiz");
-});
-
 module.exports = router;
