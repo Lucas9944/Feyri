@@ -50,6 +50,7 @@ memberController.logout = (req, res) => {
 memberController.createToken = (result) => {
   try {
     const upload_data = {
+      _id: result._id,
       mb_nick: result.mb_nick,
       mb_type: result.mb_type,
     };
@@ -60,6 +61,21 @@ memberController.createToken = (result) => {
 
     assert.ok(token, Definer.auth_err2);
     return token;
+  } catch (err) {
+    throw err;
+  }
+};
+
+memberController.checkMyAuthentication = (req, res) => {
+  try {
+    console.log("GET: cont/checkMyAuthentication");
+    let token = req.cookies["access_token"];
+    console.log("Token:", token);
+
+    const member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
+    assert.ok(member, Definer.err_auth5);
+
+    res.send({ state: "succeed", data: member });
   } catch (err) {
     throw err;
   }
