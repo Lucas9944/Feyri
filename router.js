@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const memberController = require("./controllers/memberController");
+const productController = require("./controllers/productController");
 
 /*******************************
  *           REST API          *
@@ -16,6 +17,15 @@ router.get(
   memberController.retrieveAuthmember,
   memberController.getChosenMember
 );
+
+
+// Prodct related routers
+router.post(
+  "/products",
+  memberController.retrieveAuthmember,
+  productController.getAllProducts
+);
+
 
 // others || boshqa routerlar
 router.get("/menu", (req, res) => {
