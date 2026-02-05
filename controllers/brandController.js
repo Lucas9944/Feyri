@@ -6,6 +6,23 @@ const assert = require("assert");
 
 let brandController = module.exports;
 
+brandController.getShops = async (req, res) => {
+  try {
+    console.log("GET: cont/getShops");
+    const data = req.query;
+    const shop = new Shop();
+    const result = await shop.getAllShopsData(req.member,data);
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getShops,${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
+/****************************
+ *   BSSR RELATED METHODS/       *
+ ***************************/
+
 brandController.home = (req, res) => {
   try {
     console.log("GET: cont/home");
@@ -150,7 +167,7 @@ brandController.updateBrandByAdmin = async (req, res) => {
     console.log("GET cont/updateBrandByAdmin");
     const brand = new Brand();
     const result = await brand.updateBrandByAdminData(req.body);
-    await res.json({ state: "success", data: result });
+    res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/updateBrandByAdmin, ${err.message}`);
     res.json({ state: "fail", message: err.message });

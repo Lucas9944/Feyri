@@ -5,7 +5,7 @@ const {
 } = require("../lib/config");
 
 
-const ProductModel = require("../schema/product.models");
+const ProductModel = require("../schema/product.model");
 const Definer = require("../lib/mistake");
 const Member = require("./Member");
 
@@ -78,7 +78,7 @@ class Product {
         brand_mb_id: member._id,
       });
       assert.ok(result, Definer.general_err1);
-      return result; // buni natijasi restaraunt qatordegi 11 qatorga boradi:
+      return result; 
     } catch {
       throw err;
     }

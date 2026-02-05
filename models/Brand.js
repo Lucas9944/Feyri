@@ -14,7 +14,7 @@ class Brand {
 
   //get res data
 
-  async getRestaurantData(member, data) {
+  async getAllBrandData(member, data) {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       let match = { mb_type: "BRAND", mb_status: "ACTIVE" };
@@ -36,7 +36,7 @@ class Brand {
 
         default:
           aggregationQuery.push({ $match: match });
-          const sort = { [data.order]: -1 };
+          const sort = { [data.order || "createdAt"]: -1 };
           aggregationQuery.push({ $sort: sort });
 
           break;
@@ -44,8 +44,11 @@ class Brand {
       aggregationQuery.push({ $skip: (data.page - 1) * data.limit });
       aggregationQuery.push({ $limit: data.limit });
       aggregationQuery.push(lookup_auth_member_liked(auth_mb_id));
-
-      //todo: check auth member liked the chosen target
+      aggregationQuery.push({
+        $addFields: {
+          me_liked: { $gt: [{ $size: "$me_liked" }, 0] },
+        },
+      });
 
       const result = await this.memberModel.aggregate(aggregationQuery).exec();
       assert.ok(result, Definer.general_err1);
