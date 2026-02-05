@@ -4,6 +4,7 @@ const {
   lookup_auth_member_liked,
 } = require("../lib/config");
 
+
 const ProductModel = require("../schema/product.models");
 const Definer = require("../lib/mistake");
 const Member = require("./Member");
