@@ -19,7 +19,6 @@ router.get(
   memberController.getChosenMember
 );
 
-
 // Prodct related routers
 router.post(
   "/products",
@@ -34,6 +33,17 @@ router.get(
 );
 
 // Brand related routers
-router.get("/brand",memberController.retrieveAuthmember,brandController.getShops)
+router.get(
+  "/brand",
+  memberController.retrieveAuthmember,
+  brandController.getShops
+);
+
+
+router.get(
+  "/shops/:id",
+  memberController.retrieveAuthmember,
+  brandController.getChosenShop
+);
 
 module.exports = router;

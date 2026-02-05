@@ -19,6 +19,22 @@ brandController.getShops = async (req, res) => {
   }
 };
 
+
+brandController.getChosenShop = async (req, res) => {
+  try {
+    console.log("GET: cont/getChosenBrand");
+    const id = req.params.id;
+    const shop = new Brand();
+    const result = await shop.getChosenShopData(req.member, id);
+
+    res.json({ state: "success", data: result });
+  } catch (err) {
+    console.log(`ERROR, cont/getChosenBrand,${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
+};
+
+
 /****************************
  *   BSSR RELATED METHODS/       *
  ***************************/

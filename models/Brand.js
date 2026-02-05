@@ -58,7 +58,6 @@ class Brand {
     }
   }
 
-  //get all res data
   async getAllBrandsData() {
     try {
       const result = await this.memberModel.find({ mb_type: "BRAND" }).exec();
@@ -89,8 +88,8 @@ class Brand {
     }
   }
 
-  //get chosen restData
-  async getChosenRestaurantData(member, id) {
+  //get chosen brand data
+  async getChosenShopData(member, id) {
     try {
       id = shapeIntoMongooseObjectId(id);
 
