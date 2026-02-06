@@ -5,6 +5,7 @@ const {
 } = require("../lib/config");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
+const Member = require("./Member");
 
 class Community {
   constructor() {
@@ -61,7 +62,6 @@ class Community {
     }
   }
 
-
   async getArticlesData(member, inquery) {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
@@ -92,6 +92,23 @@ class Community {
           // TODO check auth member liked the chosen target
         ])
         .exec();
+      assert.ok(result, Definer.article_err3);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getChosenArticleData(member, art_id) {
+    try {
+      art_id = shapeIntoMongooseObjectId(art_id);
+      // TODO increase art_views when usen has not seen before
+      if (member) {
+        const member_obj = new Member();
+        await member_obj.viewChosenItemByMember(member, art_id, "community");
+      }
+      const result = await this.boArticleModel.findById({ _id: art_id }).exec();
+      assert.ok(result, Definer.article_err3);
       assert.ok(Definer.article_err3);
       return result;
     } catch (err) {
