@@ -46,4 +46,11 @@ router.get(
   brandController.getChosenShop
 );
 
+// Order related routers
+router.post(
+  "/orders/create",
+  memberController.retrieveAuthmember,
+  orderController.createOrder
+);
+
 module.exports = router;
