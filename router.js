@@ -44,7 +44,6 @@ router.get(
   brandController.getShops
 );
 
-
 router.get(
   "/shops/:id",
   memberController.retrieveAuthmember,
@@ -57,7 +56,6 @@ router.post(
   memberController.retrieveAuthmember,
   orderController.createOrder
 );
-
 
 router.get(
   "/orders",
@@ -99,8 +97,7 @@ router.get(
   "/community/single-article/:art_id",
   memberController.retrieveAuthmember,
   communityController.getChosenArticle
-); 
-
+);
 
 // Following related routers
 
@@ -110,11 +107,17 @@ router.post(
   followController.subscribe
 );
 
-
 router.post(
   "/follow/unsubscriber",
   memberController.retrieveAuthmember,
   followController.unsubscriber
+);
+
+router.get("/follow/followings", followController.getMemberFollowings);
+router.get(
+  "/follow/followers",
+  memberController.retrieveAuthmember,
+  followController.getMembeFollowers
 );
 /*******************************
  *        END REST API         *
