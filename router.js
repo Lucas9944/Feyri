@@ -87,6 +87,12 @@ router.get(
   memberController.retrieveAuthmember,
   communityController.getMemberArticles
 );
+
+router.get(
+  "/community/target",
+  memberController.retrieveAuthmember,
+  communityController.getArticles
+);
 /*******************************
  *        END REST API         *
  *******************************/
