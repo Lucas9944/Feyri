@@ -65,7 +65,7 @@ class Order {
       throw err;
     }
   }
-  async saveOrderItemsData(item, order_id) {
+   async saveOrderItemsData(item, order_id) {
     try {
       order_id = shapeIntoMongooseObjectId(order_id);
       item._id = shapeIntoMongooseObjectId(item._id);
@@ -73,14 +73,47 @@ class Order {
         item_quantity: item["quantity"],
         item_price: item["price"],
         order_id: order_id,
-        product_id: item["_id"],
+        product_id: item["product_id"],
       });
       const result = await order_item.save();
       assert.ok(result, Definer.order_err2);
-      return "inserted";
+      return "created";
     } catch (err) {
       console.log(err);
       throw new Error(Definer.order_err2);
+    }
+  }
+
+  async getMyOrdersData(member, query) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member._id);
+      const order_status = query.status.toUpperCase(),
+        matches = { mb_id: mb_id, order_status: order_status };
+      const result = await this.orderModel
+        .aggregate([
+          { $match: matches },
+          { $sort: { createdAt: -1 } },
+          {
+            $lookup: {
+              from: "orderitems",
+              localField: "_id",
+              foreignField: "order_id",
+              as: "order_items",
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+              localField: "order_items.product_id",
+              foreignField: "_id",
+              as: "product_data",
+            },
+          },
+        ])
+        .exec();
+      return result;
+    } catch (err) {
+      throw err;
     }
   }
 }
