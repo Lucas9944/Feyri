@@ -16,3 +16,17 @@ followController.subscribe = async (req, res) => {
     res.json({ state: "fail", message: err.message });
   }
 };
+
+
+followController.unsubscriber = async (req, res) => {
+    try {
+      console.log("POST: cont/unsubscriber");
+      assert.ok(req.member, Definer.auth_err5);
+      const follow = new Follow();
+      await follow.unsubscriberData(req.member, req.body);
+      res.json({ state: "success", data: "unsubscribed" });
+    } catch (err) {
+      console.log(`ERROR, cont/subscribe,${err.message}`);
+      res.json({ state: "fail", message: err.message });
+    }
+  };
