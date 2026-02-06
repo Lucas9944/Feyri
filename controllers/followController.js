@@ -48,6 +48,7 @@ followController.getMembeFollowers = async (req, res) => {
     console.log("GET: cont/getMembeFollowers");
     const follow = new Follow();
     const result = await follow.getMembeFollowersData(req.member, req.query);
+    assert.ok(result, Definer.auth_err5);
     res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/subscribe,${err.message}`);
