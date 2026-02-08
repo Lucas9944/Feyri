@@ -2,7 +2,10 @@ const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcryptjs");
-const { shapeIntoMongooseObjectId } = require("../lib/config");
+const {
+  shapeIntoMongooseObjectId,
+  lookup_auth_member_following,
+} = require("../lib/config");
 const View = require("./View");
 
 class Member {
@@ -49,18 +52,23 @@ class Member {
   }
   async getChosenMemberData(member, id) {
     try {
+      const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       id = shapeIntoMongooseObjectId(id);
       console.log("member:", member);
+      let aggregateQuery = [
+        { $match: { _id: id, mb_status: "ACTIVE" } },
+        { $unset: "mb_password" },
+      ];
+
       if (member) {
         // condition if not seen before
         await this.viewChosenItemByMember(member, id, "member");
+        // TODO check auth member liked chosen target
+        aggregateQuery.push(
+          lookup_auth_member_following(auth_mb_id, "members")
+        );
       }
-      const result = await this.memberModel
-        .aggregate([
-          { $match: { _id: id, mb_status: "ACTIVE" } },
-          { $unset: "mb_password" },
-        ])
-        .exec();
+      const result = await this.memberModel.aggregate(aggregateQuery).exec();
       assert.ok(result, Definer.general_err2);
       return result[0];
     } catch (err) {
@@ -73,10 +81,7 @@ class Member {
       view_ref_id = shapeIntoMongooseObjectId(view_ref_id);
       const mb_id = shapeIntoMongooseObjectId(member._id);
       const view = new View(mb_id);
-      const doesExist = await view.checkViewExistence(
-        view_ref_id,
-        group_type
-      );
+      const doesExist = await view.checkViewExistence(view_ref_id, group_type);
       if (doesExist) return true;
       const isValid = await view.validateChosenTarget(view_ref_id, group_type);
       console.log("isValid", isValid);
