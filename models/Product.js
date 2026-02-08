@@ -4,7 +4,6 @@ const {
   lookup_auth_member_liked,
 } = require("../lib/config");
 
-
 const ProductModel = require("../schema/product.model");
 const Definer = require("../lib/mistake");
 const Member = require("./Member");
@@ -78,7 +77,7 @@ class Product {
         brand_mb_id: member._id,
       });
       assert.ok(result, Definer.general_err1);
-      return result; 
+      return result;
     } catch {
       throw err;
     }
