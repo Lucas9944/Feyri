@@ -119,6 +119,14 @@ router.get(
   memberController.retrieveAuthmember,
   followController.getMembeFollowers
 );
+
+// Like related routers
+
+router.post(
+  "/member-liken",
+  memberController.retrieveAuthmember,
+  memberController.likeMemberChosen
+);
 /*******************************
  *        END REST API         *
  *******************************/

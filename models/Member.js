@@ -7,6 +7,7 @@ const {
   lookup_auth_member_following,
 } = require("../lib/config");
 const View = require("./View");
+const Like = require("./Like");
 
 class Member {
   constructor() {
@@ -89,6 +90,35 @@ class Member {
       const result = await view.insertMemberView(view_ref_id, group_type);
       assert.ok(result, Definer.general_err1);
       return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+  async likeChosenItemByMember(member, like_ref_id, group_type) {
+    try {
+      const mb_id = shapeIntoMongooseObjectId(member._id);
+      like_ref_id = shapeIntoMongooseObjectId(like_ref_id);
+
+      const like = new Like(mb_id);
+      const isValid = await like.validateTargetItem(like_ref_id, group_type);
+      console.log("isValid:", isValid);
+      assert.ok(isValid, Definer.general_err2);
+      // doesExist
+      const doesExist = await like.checkLikeExistence(like_ref_id);
+      console.log("doesExist", doesExist);
+
+      let data = doesExist
+        ? await like.removeMemberLike(like_ref_id, group_type)
+        : await like.insertMemberLike(like_ref_id, group_type);
+      assert.ok(data, Definer.general_err1);
+
+      const result = {
+        like_group: data.like_group,
+        like_ref_id: data.like_ref_id,
+        like_status: doesExist ? 0 : 1,
+      };
+
+      return result;
     } catch (err) {
       throw err;
     }
