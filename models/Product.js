@@ -56,7 +56,7 @@ class Product {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
       id = shapeIntoMongooseObjectId(id);
-
+      console.log("member", auth_mb_id);
       if (member) {
         const member_obj = new Member();
         await member_obj.viewChosenItemByMember(member, id, "product");
