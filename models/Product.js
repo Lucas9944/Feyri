@@ -18,6 +18,9 @@ class Product {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);
 
       let match = { product_status: "PROCESS" };
+      if (data.product_collection)
+        match["product_collection"] = data.product_collection;
+      if (data.product_likes) match["product_likes"] = data.product_likes;
       if (data.brand_mb_id) {
         match["brand_mb_id"] = shapeIntoMongooseObjectId(data.brand_mb_id);
         match["product_collection_enums"] = data.product_collection;
@@ -26,6 +29,10 @@ class Product {
       const sort =
         data.order === "product_price"
           ? { [data.order]: 1 }
+          : data.order === "product_views"
+          ? { product_views: -1 } // Sort by views for trending
+          : data.order === "product_likes"
+          ? { product_likes: -1 } // Sort by likes for best sellers
           : { [data.order]: -1 };
 
       const result = await this.productModel
