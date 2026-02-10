@@ -47,7 +47,7 @@ router.get(
 router.get(
   "/shops/:id",
   memberController.retrieveAuthmember,
-  brandController.getChosenShop
+  brandController.getChosenBrand
 );
 
 // Order related routers

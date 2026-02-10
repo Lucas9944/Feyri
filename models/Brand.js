@@ -89,7 +89,7 @@ class Brand {
   }
 
   //get chosen brand data
-  async getChosenShopData(member, id) {
+  async getChosenBrandData(member, id) {
     try {
       id = shapeIntoMongooseObjectId(id);
 

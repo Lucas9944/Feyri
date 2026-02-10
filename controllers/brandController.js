@@ -20,12 +20,12 @@ brandController.getBrand = async (req, res) => {
 };
 
 
-brandController.getChosenShop = async (req, res) => {
+brandController.getChosenBrand = async (req, res) => {
   try {
     console.log("GET: cont/getChosenBrand");
     const id = req.params.id;
     const brand = new Brand();
-    const result = await brand.getChosenShopData(req.member, id);
+    const result = await brand.getChosenBrandData(req.member, id);
 
     res.json({ state: "success", data: result });
   } catch (err) {
