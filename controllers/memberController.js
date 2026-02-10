@@ -74,7 +74,7 @@ memberController.checkMyAuthentication = (req, res) => {
     console.log("Token:", token);
     const member = token ? jwt.verify(token, process.env.SECRET_TOKEN) : null;
     assert.ok(member, Definer.err_auth5);
-    res.send({ state: "succeed", data: member });
+    res.send({ state: "success", data: member });
   } catch (err) {
     throw err;
   }

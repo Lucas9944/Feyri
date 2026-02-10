@@ -6,15 +6,15 @@ const assert = require("assert");
 
 let brandController = module.exports;
 
-brandController.getShops = async (req, res) => {
+brandController.getBrand = async (req, res) => {
   try {
-    console.log("GET: cont/getShops");
+    console.log("GET: cont/getBrand");
     const data = req.query;
-    const shop = new Shop();
-    const result = await shop.getAllShopsData(req.member,data);
+    const brand = new Brand();
+    const result = await brand.getAllBrandData(req.member,data);
     res.json({ state: "success", data: result });
   } catch (err) {
-    console.log(`ERROR, cont/getShops,${err.message}`);
+    console.log(`ERROR, cont/getBrand,${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
@@ -24,8 +24,8 @@ brandController.getChosenShop = async (req, res) => {
   try {
     console.log("GET: cont/getChosenBrand");
     const id = req.params.id;
-    const shop = new Brand();
-    const result = await shop.getChosenShopData(req.member, id);
+    const brand = new Brand();
+    const result = await brand.getChosenShopData(req.member, id);
 
     res.json({ state: "success", data: result });
   } catch (err) {

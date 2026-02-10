@@ -41,7 +41,7 @@ router.get(
 router.get(
   "/brand",
   memberController.retrieveAuthmember,
-  brandController.getShops
+  brandController.getBrand
 );
 
 router.get(
