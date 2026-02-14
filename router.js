@@ -113,7 +113,11 @@ router.post(
   followController.unsubscriber
 );
 
-router.get("/follow/followings", followController.getMemberFollowings);
+router.get(
+  "/follow/followings",
+  memberController.retrieveAuthmember,
+  followController.getMemberFollowings
+);
 router.get(
   "/follow/followers",
   memberController.retrieveAuthmember,

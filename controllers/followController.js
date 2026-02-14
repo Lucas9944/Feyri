@@ -7,7 +7,7 @@ const Follow = require("../models/Follow");
 followController.subscribe = async (req, res) => {
   try {
     console.log("POST: cont/subscribe");
-    assert.ok(req.member, Definer.auth_err5);
+    assert.ok(req.member, Definer.err_auth5);
     const follow = new Follow();
     await follow.subscribeData(req.member, req.body);
     res.json({ state: "success", data: "subscribed" });
@@ -20,7 +20,7 @@ followController.subscribe = async (req, res) => {
 followController.unsubscriber = async (req, res) => {
   try {
     console.log("POST: cont/unsubscriber");
-    assert.ok(req.member, Definer.auth_err5);
+    assert.ok(req.member, Definer.err_auth5);
     const follow = new Follow();
     await follow.unsubscriberData(req.member, req.body);
     res.json({ state: "success", data: "unsubscribed" });
@@ -35,7 +35,7 @@ followController.getMemberFollowings = async (req, res) => {
     console.log("GET: cont/getMemberFollowings");
     const follow = new Follow();
     const result = await follow.getMemberFollowingsDAta(req.query);
-    assert.ok(result, Definer.auth_err5);
+    // assert.ok(result, Definer.auth_err5);
     res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/getMemberFollowings,${err.message}`);
@@ -48,7 +48,7 @@ followController.getMembeFollowers = async (req, res) => {
     console.log("GET: cont/getMembeFollowers");
     const follow = new Follow();
     const result = await follow.getMembeFollowersData(req.member, req.query);
-    assert.ok(result, Definer.auth_err5);
+    assert.ok(req.member, Definer.auth_err5);
     res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/subscribe,${err.message}`);

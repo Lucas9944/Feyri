@@ -4,13 +4,13 @@ const {
   shapeIntoMongooseObjectId,
   lookup_auth_member_following,
 } = require("../lib/config");
-const FollowrModel = require("../schema/follow.model");
+const followModel = require("../schema/follow.model");
 const MemberModel = require("../schema/member.model");
 
 class Follow {
   constructor() {
     this.memberModel = MemberModel;
-    this.followrModel = FollowrModel;
+    this.followModel = followModel;
   }
   async subscribeData(member, data) {
     try {
@@ -38,7 +38,7 @@ class Follow {
 
   async createSubscriptionData(follow_id, subcriber_id) {
     try {
-      const new_follow = new this.followrModel({
+      const new_follow = new this.followModel({
         follow_id: follow_id,
         subscriber_id: subcriber_id,
       });
@@ -80,7 +80,7 @@ class Follow {
       const subcriber_id = shapeIntoMongooseObjectId(member._id);
       const follow_id = shapeIntoMongooseObjectId(data.mb_id);
 
-      const result = await this.followrModel.findOneAndDelete({
+      const result = await this.followModel.findOneAndDelete({
         follow_id: follow_id,
         subscriber_id: subcriber_id,
       });
@@ -98,7 +98,8 @@ class Follow {
         page = inquiry.page * 1,
         limit = inquiry.limit * 1;
 
-      const result = await this.followrModel
+      const result = await this.followModel
+
         .aggregate([
           { $match: { subscriber_id: subscriber_id } },
           { $sort: { createdAt: -1 } },
@@ -147,7 +148,7 @@ class Follow {
       if (member && member._id === inquiry.mb_id) {
         aggregateQuery.push(lookup_auth_member_following(follow_id));
       }
-      const result = await this.followrModel.aggregate(aggregateQuery).exec();
+      const result = await this.followModel.aggregate(aggregateQuery).exec();
       assert.ok(result, Definer.follow_err3);
       return result;
     } catch (err) {

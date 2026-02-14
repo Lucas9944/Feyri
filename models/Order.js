@@ -2,7 +2,10 @@ const MemberModel = require("../schema/member.model");
 const Definer = require("../lib/mistake");
 const assert = require("assert");
 const bcrypt = require("bcrypt");
-const { shapeIntoMongooseObjectId } = require("../lib/config");
+const {
+  shapeIntoMongooseObjectId,
+  order_status_enums,
+} = require("../lib/config");
 const OrderModel = require("../schema/order.model");
 const OrderItemModel = require("../schema/order_item.model");
 
