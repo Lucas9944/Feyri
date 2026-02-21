@@ -37,6 +37,18 @@ router.get(
   productController.getChosenProduct
 );
 
+router.post(
+  "/products/:id/review",
+  memberController.retrieveAuthmember,
+  productController.createReview
+);
+
+router.get(
+  "/products/:id/reviews",
+  memberController.retrieveAuthmember,
+  productController.getProductReviews
+);
+
 // Brand related routers
 router.get(
   "/brand",
