@@ -43,18 +43,14 @@
                 <tr>
                   <td><%= key + 1 %></td>
                   <td><%= value.product_name %></td>
-                  <td><%= value.product_collection %></td>
-                  <td><%= value.product_size %></td>
+                  <td><%= value.product_type || "-" %></td>
+                  <td><%= value.product_size || "-" %></td>
                   <td><%= value.product_price %></td>
                   <td><%= value.product_left_cnt %></td>
                   <td>
                     <select class="space_select new_product_status" id="<%= value._id %>">
-                      <option value="PAUSED" <%= value.product_status === 'PAUSED' ? 'selected' : '' %>>
-                        PAUSED
-                      </option>
-                      <option value="PROCESS" <%= value.product_status === 'PROCESS' ? 'selected' : '' %>>
-                        PROCESS
-                      </option>
+                      <option value="PAUSED" <%= value.product_status === "PAUSED" ? "selected" : "" %>>PAUSED</option>
+                      <option value="PROCESS" <%= value.product_status === "PROCESS" ? "selected" : "" %>>PROCESS</option>
                     </select>
                   </td>
                 </tr>
@@ -73,6 +69,7 @@
           method="POST"
           class="dish_container"
           enctype="multipart/form-data"
+          style="display:none;"
         >
           <div class="long_input" style="display: flex; align-items: center;">
             <span class="new_dish_txt">Yangi Mahsulot</span>
@@ -83,8 +80,9 @@
               <label>Product nomi</label>
               <input type="text" placeholder="Product nomi" name="product_name" class="product_name" />
             </div>
-            <input name="product_status" value="PAUSED" class="product_status" hidden>
-            <input name="brand_mb_id" value="<%= member._id %>" class="brand_mb_id" hidden>
+
+            <input type="hidden" name="product_status" value="PAUSED" class="product_status">
+            <input type="hidden" name="brand_mb_id" value="<%= member._id %>" class="brand_mb_id">
           </div>
 
           <div class="half_input_frame">
@@ -116,7 +114,7 @@
               </select>
             </div>
 
-            <div class="half_input" id="product_size">
+            <div class="half_input" id="product_size_wrap">
               <label>Product Hajmi</label>
               <select class="product_size" name="product_size">
                 <option value="15ml">15ml</option>
@@ -130,17 +128,14 @@
                 <option value="200ml">200ml</option>
               </select>
             </div>
+          </div>
 
-            <!-- Legacy block (hozircha hidden) -->
-            <div class="half_input" id="product_volume" style="display: none;">
-              <label>Product Hajmi</label>
-              <select class="product_volume" name="product_volume">
-                <option value="0.5">0.5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-              </select>
-            </div>
+          <!-- Product Type (Category ga bog'liq) -->
+          <div class="long_input">
+            <label>Product Turi</label>
+            <select class="product_type" name="product_type">
+              <option value="">Avval category tanlang</option>
+            </select>
           </div>
 
           <div class="long_input">
@@ -150,76 +145,77 @@
 
           <div class="img_frame">
             <label>Product Rasmlari</label>
+
             <div class="media-frame">
               <div class="upload_img_box">
-                <label for="file_1" style="cursor:pointer;">
-                  <img src="/images/upload.svg" class="1" id="image_section_1">
+                <label for="file_1" style="cursor:pointer; display:block;">
+                  <img src="/images/upload.svg" id="image_section_1" alt="upload-1">
                 </label>
                 <input
                   type="file"
                   id="file_1"
                   name="product_images"
-                  class="image_one product_file_input"
+                  class="product_file_input image_one"
                   accept="image/*"
                   style="display:none;"
                   onchange="previewFileHandler(this, 1)"
                 >
               </div>
-          
+
               <div class="upload_img_box">
-                <label for="file_2" style="cursor:pointer;">
-                  <img src="/images/upload.svg" class="2" id="image_section_2">
+                <label for="file_2" style="cursor:pointer; display:block;">
+                  <img src="/images/upload.svg" id="image_section_2" alt="upload-2">
                 </label>
                 <input
                   type="file"
                   id="file_2"
                   name="product_images"
-                  class="image_two product_file_input"
+                  class="product_file_input image_two"
                   accept="image/*"
                   style="display:none;"
                   onchange="previewFileHandler(this, 2)"
                 >
               </div>
-          
+
               <div class="upload_img_box">
-                <label for="file_3" style="cursor:pointer;">
-                  <img src="/images/upload.svg" class="3" id="image_section_3">
+                <label for="file_3" style="cursor:pointer; display:block;">
+                  <img src="/images/upload.svg" id="image_section_3" alt="upload-3">
                 </label>
                 <input
                   type="file"
                   id="file_3"
                   name="product_images"
-                  class="image_three product_file_input"
+                  class="product_file_input image_three"
                   accept="image/*"
                   style="display:none;"
                   onchange="previewFileHandler(this, 3)"
                 >
               </div>
-          
+
               <div class="upload_img_box">
-                <label for="file_4" style="cursor:pointer;">
-                  <img src="/images/upload.svg" class="4" id="image_section_4">
+                <label for="file_4" style="cursor:pointer; display:block;">
+                  <img src="/images/upload.svg" id="image_section_4" alt="upload-4">
                 </label>
                 <input
                   type="file"
                   id="file_4"
                   name="product_images"
-                  class="image_four product_file_input"
+                  class="product_file_input image_four"
                   accept="image/*"
                   style="display:none;"
                   onchange="previewFileHandler(this, 4)"
                 >
               </div>
-          
+
               <div class="upload_img_box">
-                <label for="file_5" style="cursor:pointer;">
-                  <img src="/images/upload.svg" class="5" id="image_section_5">
+                <label for="file_5" style="cursor:pointer; display:block;">
+                  <img src="/images/upload.svg" id="image_section_5" alt="upload-5">
                 </label>
                 <input
                   type="file"
                   id="file_5"
                   name="product_images"
-                  class="image_five product_file_input"
+                  class="product_file_input image_five"
                   accept="image/*"
                   style="display:none;"
                   onchange="previewFileHandler(this, 5)"
@@ -227,7 +223,6 @@
               </div>
             </div>
           </div>
-          
 
           <div class="long_input" style="align-items: flex-end; margin-bottom: 25px;">
             <button type="submit" class="btn btn-primary" id="create_product">Chop etish</button>
@@ -238,25 +233,102 @@
   </div>
 
   <script>
-    $(function () {
-      // Legacy drink logic disabled (cosmetics uchun kerak emas)
-      // $(".product_collection").on("change", () => {
-      //   const selected_value = $(".product_collection").val();
-      //   if (selected_value === 'drink') {
-      //     $("#product_volume").show();
-      //     $("#product_size").hide();
-      //   } else {
-      //     $("#product_volume").hide();
-      //     $("#product_size").show();
-      //   }
-      // });
+    // Category -> Product Type map (frontend temporary)
+    // Keyin buni config.js dan backend orqali yuborsak yanada toza bo'ladi
+    const PRODUCT_TYPE_MAP = {
+      skincare: [
+        "cleanser",
+        "toner",
+        "serum",
+        "ampoule",
+        "essence",
+        "cream",
+        "eye_cream",
+        "face_mask",
+        "sunscreen",
+        "mist"
+      ],
+      makeup: [
+        "primer",
+        "foundation",
+        "cushion",
+        "bb_cream",
+        "cc_cream",
+        "concealer",
+        "powder",
+        "blush",
+        "mascara",
+        "eyeliner",
+        "lip_tint",
+        "lipstick"
+      ],
+      body_hair: [
+        "body_wash",
+        "body_lotion",
+        "shampoo",
+        "conditioner",
+        "hair_treatment"
+      ],
+      fragrance: [
+        "perfume",
+        "body_mist",
+        "hair_mist"
+      ],
+      beauty_tools: [
+        "beauty_tool"
+      ]
+    };
 
-      $(".hiding_btn").on("click", () => {
+    function formatTypeLabel(value) {
+      if (!value) return "";
+      return value
+        .split("_")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
+
+    function syncProductTypeOptions() {
+      const selectedCollection = $(".product_collection").val();
+      const $typeSelect = $(".product_type");
+      const types = PRODUCT_TYPE_MAP[selectedCollection] || [];
+
+      $typeSelect.empty();
+
+      if (!types.length) {
+        $typeSelect.append('<option value="">Type topilmadi</option>');
+        return;
+      }
+
+      $typeSelect.append('<option value="">Product turini tanlang</option>');
+
+      types.forEach(function(type) {
+        $typeSelect.append(
+          `<option value="${type}">${formatTypeLabel(type)}</option>`
+        );
+      });
+    }
+
+    $(function () {
+      // Form open/close
+      $(".hiding_btn").on("click", function () {
         $(".dish_container").slideToggle(500);
-        $(".hiding_btn").css("display", "none");
+        $(this).hide();
+
+        // Form ochilganda type options sync bo'lsin
+        setTimeout(function () {
+          syncProductTypeOptions();
+        }, 100);
       });
 
-      // product status changer
+      // Page loadda ham sync
+      syncProductTypeOptions();
+
+      // Category change -> type list update
+      $(".product_collection").on("change", function () {
+        syncProductTypeOptions();
+      });
+
+      // Product status update
       $(".new_product_status").on("change", async function (e) {
         const id = e.target.id;
         const product_status = $(`#${id}.new_product_status`).val();
@@ -268,39 +340,54 @@
           });
 
           const result = response.data;
-          console.log("result", result);
 
           if (result.state === "success") {
             alert("success");
             location.reload();
           } else {
-            alert(result.message);
+            alert(result.message || "Update failed");
           }
         } catch (err) {
           console.log("updateChosenProduct err:", err);
+          alert("Server error");
         }
       });
     });
 
     function validateForm() {
       const brand_mb_id = $(".brand_mb_id").val();
-      const product_name = $(".product_name").val();
+      const product_name = $(".product_name").val().trim();
       const product_price = $(".product_price").val();
       const product_left_cnt = $(".product_left_cnt").val();
       const product_collection = $(".product_collection").val();
-      const product_description = $(".product_description").val();
+      const product_type = $(".product_type").val();
+      const product_description = $(".product_description").val().trim();
       const product_status = $(".product_status").val();
 
       if (
-        brand_mb_id === "" ||
-        product_name === "" ||
-        product_price === "" ||
-        product_left_cnt === "" ||
-        product_collection === "" ||
-        product_description === "" ||
-        product_status === ""
+        !brand_mb_id ||
+        !product_name ||
+        !product_price ||
+        !product_left_cnt ||
+        !product_collection ||
+        !product_type ||
+        !product_description ||
+        !product_status
       ) {
         alert("Iltimos hamma malumotlarni kiriting");
+        return false;
+      }
+
+      // kamida 1 ta rasm tanlangan bo'lsin
+      const hasAtLeastOneImage =
+        $("#file_1").val() ||
+        $("#file_2").val() ||
+        $("#file_3").val() ||
+        $("#file_4").val() ||
+        $("#file_5").val();
+
+      if (!hasAtLeastOneImage) {
+        alert("Kamida 1 ta product rasmi tanlang");
         return false;
       }
 
@@ -312,9 +399,11 @@
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function () {
+      reader.onload = function (e) {
         const output = document.getElementById("image_section_" + order);
-        if (output) output.src = reader.result;
+        if (output) {
+          output.src = e.target.result;
+        }
       };
       reader.readAsDataURL(file);
     }

@@ -41,17 +41,29 @@ class Member {
         .exec();
 
       assert.ok(member, Definer.auth_err2);
+
       const isMatch = await bcrypt.compare(
         input.mb_password,
         member.mb_password
       );
       assert.ok(isMatch, Definer.auth_err3);
 
-      return await this.memberModel.findOne({ mb_nick: input.mb_nick }).exec();
+      const loginMember = await this.memberModel
+        .findOne(
+          { mb_nick: input.mb_nick },
+          {
+            mb_password: 0, // sessionga password kerak emas
+          }
+        )
+        .lean()
+        .exec();
+
+      return loginMember;
     } catch (err) {
       throw err;
     }
   }
+
   async getChosenMemberData(member, id) {
     try {
       const auth_mb_id = shapeIntoMongooseObjectId(member?._id);

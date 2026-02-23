@@ -11,14 +11,13 @@ brandController.getBrand = async (req, res) => {
     console.log("GET: cont/getBrand");
     const data = req.query;
     const brand = new Brand();
-    const result = await brand.getAllBrandData(req.member,data);
+    const result = await brand.getAllBrandData(req.member, data);
     res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/getBrand,${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
-
 
 brandController.getChosenBrand = async (req, res) => {
   try {
@@ -33,7 +32,6 @@ brandController.getChosenBrand = async (req, res) => {
     res.json({ state: "fail", message: err.message });
   }
 };
-
 
 /****************************
  *   BSSR RELATED METHODS/       *
@@ -103,20 +101,32 @@ brandController.getLoginMyBrand = async (req, res) => {
 
 brandController.loginProcess = async (req, res) => {
   try {
-    console.log("POST: const/loginProcess");
-    const data = req.body,
-      member = new Member(),
-      result = await member.loginData(data);
+    console.log("POST: cont/loginProcess");
 
-    req.session.member = result;
-    req.session.save(function () {
-      result.mb_type === "ADMIN"
+    const data = req.body;
+    const member = new Member();
+    const result = await member.loginData(data);
+
+    req.session.member = {
+      _id: result._id,
+      mb_nick: result.mb_nick,
+      mb_type: result.mb_type,
+      mb_status: result.mb_status,
+    };
+
+    req.session.save(function (err) {
+      if (err) {
+        console.log("SESSION SAVE ERROR:", err.message);
+        return res.json({ state: "fail", message: err.message });
+      }
+
+      return result.mb_type === "ADMIN"
         ? res.redirect("/feyri/all-brands")
         : res.redirect("/feyri/products/menu");
     });
   } catch (err) {
     console.log(`ERROR, cont/loginProcess, ${err.message}`);
-    res.json({ state: "fail", message: err.message });
+    return res.json({ state: "fail", message: err.message });
   }
 };
 

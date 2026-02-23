@@ -49,7 +49,7 @@ productController.getProductReviews = async (req, res) => {
       req.member,
       id,
       req.query
-    ); 
+    );
     res.json({ state: "success", data: result });
   } catch (err) {
     res.json({ state: "fail", message: err.message });
@@ -62,10 +62,12 @@ productController.getProductReviews = async (req, res) => {
 
 productController.addNewProduct = async (req, res) => {
   try {
+    console.log("Product prototype methods:", Object.getOwnPropertyNames(Product.prototype || {}));
     console.log(`POST: cont/addNewProduct`);
     assert(req.files, Definer.general_err3);
 
     const product = new Product();
+    
     let data = req.body;
 
     data.product_images = req.files.map((ele) => {
@@ -77,11 +79,18 @@ productController.addNewProduct = async (req, res) => {
     const html = `<script>
                     alert('new product added successfully');
                     window.location.replace('/feyri/products/menu');
-                   </script>`;
+                  </script>`;
 
     res.end(html);
   } catch (err) {
     console.log(`ERROR, cont/addNewProduct, ${err.message}`);
+
+    const html = `<script>
+                    alert(${JSON.stringify(err.message)});
+                    window.history.back();
+                  </script>`;
+
+    res.end(html);
   }
 };
 
